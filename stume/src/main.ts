@@ -73,7 +73,7 @@ const renderHome = () => {
     </section>
 
     <section class="player-showcase" aria-label="Player">
-      <h2>Player</h2>
+      <h2>${currentUser ? escapeHtml(currentUser) : 'Player'}</h2>
       <img src="${playerIcon}" alt="Player icon" />
     </section>
 
@@ -125,7 +125,7 @@ const renderAuth = (mode: 'login' | 'signup', message = '') => {
       <section class="auth-card" aria-labelledby="auth-title">
         <p class="eyebrow">${isSignup ? 'new player' : 'welcome back'}</p>
         <h1 id="auth-title">${isSignup ? 'sign up' : 'log in'}</h1>
-        <p class="auth-intro">${isSignup ? 'make your own space to study, play, and grow.' : 'pick up where you left off.'}</p>
+        <p class="auth-intro">${isSignup ? '' : ''}</p>
         <form class="auth-form" data-auth-form="${mode}">
           <label for="username">username</label>
           <input id="username" name="username" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" required />

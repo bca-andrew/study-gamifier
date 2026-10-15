@@ -84,7 +84,7 @@ button {
 
 .auth-button {
   border: 0;
-  border-radius: 2px;
+  border-radius: 4px;
   padding: 10px 13px;
   background: #101be8;
   color: #fff;
@@ -444,6 +444,7 @@ button {
 .auth-submit {
   min-height: 62px;
   margin-top: 3px;
+  border-radius: 4px;
 }
 
 .auth-switch {
