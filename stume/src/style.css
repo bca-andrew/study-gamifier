@@ -19,6 +19,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Kripa";
+  src: url("./assets/fonts/Kripa-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
 :root {
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   color: #242336;
@@ -77,6 +84,14 @@ button {
   font-weight: 800;
 }
 
+.login-link {
+  color: #7e08df;
+}
+
+.auth-link.login-link:hover {
+  color: #000;
+}
+
 .auth-link:hover,
 .text-button:hover {
   color: #7e08df;
@@ -106,9 +121,26 @@ button {
 }
 
 .welcome-user {
-  color: #8b8795;
+  color: #000;
   font-family: 'RibeyeMarrow', cursive;
   font-size: 12px;
+}
+
+.coin-balance {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #000;
+  font-family: 'RibeyeMarrow', cursive;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.coin-balance img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .mini-brand {
@@ -286,6 +318,96 @@ button {
   background: #0dcc23dd;
   font-size: 21px;
   font-weight: 800;
+}
+
+.study-timer-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(100%, 620px);
+  margin: 14vh auto 0;
+  border: 3px solid #242336;
+  padding: 42px 35px 30px;
+  background: #fefffe7b;
+  color: #242336;
+  box-shadow: 10px 10px 0 rgba(42, 38, 59, .12);
+  text-align: center;
+}
+
+.study-timer-card h1 {
+  margin: 0 0 22px;
+  color: #000;
+  font: 700 clamp(42px, 8vw, 68px)/.9 'Kripa', sans-serif;
+  letter-spacing: -.07em;
+}
+
+.study-timer-card strong {
+  color: #000;
+  font: 900 clamp(62px, 14vw, 126px)/.9 'RibeyeMarrow', cursive;
+  letter-spacing: -.08em;
+}
+
+.study-timer-card .eyebrow {
+  margin-bottom: 14px;
+}
+
+.study-timer-card .timer-note {
+  width: auto;
+  margin: 22px 0 0;
+  color: #000;
+  font-family: 'RibeyeMarrow', cursive;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: lowercase;
+}
+
+.timer-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  margin-top: 28px;
+}
+
+.timer-control-button {
+  width: auto;
+  min-width: 150px;
+  min-height: 52px;
+  padding: 0 20px;
+  background: #0a3af7;
+  font-size: 14px;
+}
+
+.timer-warning {
+  margin: 27px 0 0;
+  color: #e8250c;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.admin-timer-button {
+  display: inline-block;
+  border: 0;
+  padding: 5px 8px;
+  background: transparent;
+  color: #aaa3ae;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.admin-timer-button:hover {
+  color: #e8250c;
+}
+
+.study-page {
+  width: min(100%, 1160px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 28px 56px 30px;
 }
 
 .button-icon {
@@ -480,6 +602,11 @@ button {
     white-space: nowrap;
   }
 
+  .coin-balance img {
+    width: 17px;
+    height: 17px;
+  }
+
   .auth-card {
     margin-top: 10vh;
     padding: 34px 24px 30px;
@@ -518,7 +645,8 @@ button {
 @media (max-width: 420px) {
   .auth-link,
   .auth-button,
-  .welcome-user {
+  .welcome-user,
+  .coin-balance {
     font-size: 10px;
   }
 
@@ -538,6 +666,20 @@ button {
   .start-button {
     min-height: 70px;
     font-size: 18px;
+  }
+
+  .study-page {
+    padding: 22px 22px 24px;
+  }
+
+  .study-timer-card {
+    margin-top: 10vh;
+    padding: 34px 20px 26px;
+  }
+
+  .timer-controls {
+    flex-direction: column;
+    gap: 10px;
   }
 
   .secondary-button {

@@ -1,5 +1,7 @@
 import './style.css'
 import playerIcon from './assets/images/Icon_Smiley.png'
+import coinIcon from './assets/images/coin_nobg.png'
+import alarmSound from './assets/sounds/mixkit-classic-alarm-995.wav'
 
 type Account = {
   username: string
@@ -8,7 +10,13 @@ type Account = {
 
 const accountsKey = 'stume-accounts'
 const currentUserKey = 'stume-current-user'
+const coinsKey = 'stume-coins'
 const app = document.querySelector<HTMLDivElement>('#app')!
+const alarm = new Audio(alarmSound)
+
+let studyTimerRemaining = 0
+let studyTimerRunning = false
+let studyTimerInterval: number | null = null
 
 const brandMarkup = `
   <span class="brand-letter brand-s">s</span><span class="brand-letter brand-t">t</span><span class="brand-letter brand-u">u</span><span class="brand-letter brand-m">m</span><span class="brand-letter brand-e">e</span>
@@ -32,7 +40,7 @@ const getAccounts = (): Account[] => {
     const accounts = JSON.parse(storedAccounts)
     return Array.isArray(accounts)
       ? accounts.filter((account): account is Account =>
-          typeof account?.username === 'string' && typeof account?.password === 'string')
+        typeof account?.username === 'string' && typeof account?.password === 'string')
       : []
   } catch {
     return []
@@ -47,11 +55,131 @@ const setCurrentUser = (username: string | null) => {
   }
 }
 
+const getCoins = (username: string | null) => {
+  if (!username) {
+    return 0
+  }
+
+  try {
+    const storedCoins = JSON.parse(localStorage.getItem(coinsKey) ?? '{}')
+    return typeof storedCoins[username] === 'number' ? storedCoins[username] : 0
+  } catch {
+    return 0
+  }
+}
+
+const addCoins = (amount: number) => {
+  const username = localStorage.getItem(currentUserKey)
+  if (!username) {
+    return
+  }
+
+  let storedCoins: Record<string, number> = {}
+  try {
+    const parsedCoins = JSON.parse(localStorage.getItem(coinsKey) ?? '{}')
+    if (parsedCoins && typeof parsedCoins === 'object') {
+      storedCoins = parsedCoins
+    }
+  } catch {
+    storedCoins = {}
+  }
+
+  storedCoins[username] = getCoins(username) + amount
+  localStorage.setItem(coinsKey, JSON.stringify(storedCoins))
+}
+
+const formatTime = (totalSeconds: number) => {
+  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0')
+  const seconds = (totalSeconds % 60).toString().padStart(2, '0')
+  return `${minutes}:${seconds}`
+}
+
+const updateTimerDisplay = () => {
+  const timerDisplay = document.querySelector<HTMLElement>('[data-study-timer]')
+  if (timerDisplay) {
+    timerDisplay.textContent = formatTime(studyTimerRemaining)
+  }
+}
+
+const stopStudyTimerInterval = () => {
+  if (studyTimerInterval !== null) {
+    window.clearInterval(studyTimerInterval)
+    studyTimerInterval = null
+  }
+}
+
+const finishStudyTimer = () => {
+  stopStudyTimerInterval()
+  studyTimerRemaining = 0
+  studyTimerRunning = false
+  addCoins(25)
+  void alarm.play().catch((error: unknown) => {
+    console.error('Unable to play the study timer alarm.', error)
+  })
+  renderHome()
+}
+
+const startStudyTimer = (durationSeconds: number) => {
+  stopStudyTimerInterval()
+  studyTimerRemaining = studyTimerRemaining > 0
+    ? Math.min(studyTimerRemaining, durationSeconds)
+    : durationSeconds
+  studyTimerRunning = true
+  renderStudyTimer()
+  updateTimerDisplay()
+  studyTimerInterval = window.setInterval(() => {
+    if (!studyTimerRunning) {
+      return
+    }
+
+    studyTimerRemaining -= 1
+    updateTimerDisplay()
+    if (studyTimerRemaining <= 0) {
+      finishStudyTimer()
+    }
+  }, 1000)
+}
+
+const leaveStudyTimer = () => {
+  stopStudyTimerInterval()
+  if (studyTimerRemaining > 0) {
+    studyTimerRemaining += 2 * 60
+  }
+  studyTimerRunning = false
+  renderHome()
+}
+
+const renderStudyTimer = () => {
+  app.innerHTML = `
+    <main class="study-page">
+      <header class="topbar">
+        <a class="mini-brand" href="/" aria-label="stume home">${brandMarkup}</a>
+        <button class="auth-link" data-study-action="back" type="button">go back</button>
+      </header>
+
+      <section class="study-timer-card" role="timer" aria-live="polite">
+        <p class="eyebrow"></p>
+        <h1>25 minute pomodoro</h1>
+        <strong data-study-timer>${formatTime(studyTimerRemaining)}</strong>
+        <p class="timer-note">stay focused!!</p>
+        <div class="timer-controls">
+          <button class="action-button timer-control-button" data-study-action="pause" type="button">
+            <span class="button-label">${studyTimerRunning ? 'pause' : 'resume'}</span>
+          </button>
+          <button class="admin-timer-button" data-study-action="admin" type="button">admin: set to 5 sec</button>
+        </div>
+        <p class="timer-warning"></p>
+      </section>
+    </main>
+  `
+}
+
 const renderHome = () => {
   const currentUser = localStorage.getItem(currentUserKey)
+  const coins = getCoins(currentUser)
   const accountControls = currentUser
-    ? `<span class="welcome-user">hi, ${escapeHtml(currentUser)}</span><button class="auth-link" data-auth-action="logout" type="button">log out</button>`
-    : `<button class="auth-link" data-auth-action="login" type="button">log in</button><button class="auth-button" data-auth-action="signup" type="button">sign up <span aria-hidden="true">↗</span></button>`
+    ? `<span class="welcome-user">Hi ${escapeHtml(currentUser)}!!</span><span class="coin-balance"><img src="${coinIcon}" alt="" aria-hidden="true" /><span>${coins}</span></span><button class="auth-link" data-auth-action="logout" type="button">log out</button>`
+    : `<button class="auth-link login-link" data-auth-action="login" type="button">log in</button><button class="auth-button" data-auth-action="signup" type="button">sign up <span aria-hidden="true">↗</span></button>`
 
   app.innerHTML = `
   <main class="home">
@@ -64,7 +192,7 @@ const renderHome = () => {
       <div class="doodle doodle-star" aria-hidden="true"></div>
       <div class="doodle doodle-spark" aria-hidden="true"></div>
       <div class="hero-copy">
-        <p class="eyebrow">welcome to</p>
+        <p class="eyebrow"></p>
         <h1 id="welcome-title" class="wordmark" aria-label="stume">
           <span class="brand-letter brand-s">s</span><span class="brand-letter brand-t">t</span><span class="brand-letter brand-u">u</span><span class="brand-letter brand-m">m</span><span class="brand-letter brand-e">e</span>
         </h1>
@@ -78,7 +206,7 @@ const renderHome = () => {
     </section>
 
     <section class="actions" aria-label="Study actions">
-      <button class="action-button start-button" type="button">
+      <button class="action-button start-button" data-study-action="start" type="button">
         <span class="button-icon icon-play" aria-hidden="true">▶</span>
         <span class="button-label">start studying</span>
         <span class="button-arrow" aria-hidden="true">↗</span>
@@ -159,6 +287,37 @@ app.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
   const actionElement = target.closest<HTMLElement>('[data-auth-action]')
   const action = actionElement?.dataset.authAction
+  const studyAction = target.closest<HTMLElement>('[data-study-action]')?.dataset.studyAction
+
+  if (studyAction === 'start') {
+    startStudyTimer(25 * 60)
+    return
+  }
+
+  if (studyAction === 'admin') {
+    startStudyTimer(5)
+    return
+  }
+
+  if (studyAction === 'pause') {
+    studyTimerRunning = !studyTimerRunning
+    if (studyTimerRunning && studyTimerInterval === null) {
+      studyTimerInterval = window.setInterval(() => {
+        studyTimerRemaining -= 1
+        updateTimerDisplay()
+        if (studyTimerRemaining <= 0) {
+          finishStudyTimer()
+        }
+      }, 1000)
+    }
+    renderStudyTimer()
+    return
+  }
+
+  if (studyAction === 'back') {
+    leaveStudyTimer()
+    return
+  }
 
   if (action === 'login' || action === 'signup') {
     renderAuth(action)
