@@ -17,6 +17,7 @@ const alarm = new Audio(alarmSound)
 let studyTimerRemaining = 0
 let studyTimerRunning = false
 let studyTimerInterval: number | null = null
+let studyTimerEndsAt: number | null = null
 
 const brandMarkup = `
   <span class="brand-letter brand-s">s</span><span class="brand-letter brand-t">t</span><span class="brand-letter brand-u">u</span><span class="brand-letter brand-m">m</span><span class="brand-letter brand-e">e</span>
@@ -108,8 +109,22 @@ const stopStudyTimerInterval = () => {
   }
 }
 
+const updateStudyTimerRemaining = () => {
+  if (!studyTimerRunning || studyTimerEndsAt === null) {
+    return
+  }
+
+  studyTimerRemaining = Math.max(0, Math.ceil((studyTimerEndsAt - Date.now()) / 1000))
+  updateTimerDisplay()
+
+  if (studyTimerRemaining <= 0) {
+    finishStudyTimer()
+  }
+}
+
 const finishStudyTimer = () => {
   stopStudyTimerInterval()
+  studyTimerEndsAt = null
   studyTimerRemaining = 0
   studyTimerRunning = false
   addCoins(25)
@@ -125,27 +140,22 @@ const startStudyTimer = (durationSeconds: number) => {
     ? Math.min(studyTimerRemaining, durationSeconds)
     : durationSeconds
   studyTimerRunning = true
+  studyTimerEndsAt = Date.now() + studyTimerRemaining * 1000
   renderStudyTimer()
   updateTimerDisplay()
   studyTimerInterval = window.setInterval(() => {
-    if (!studyTimerRunning) {
-      return
-    }
-
-    studyTimerRemaining -= 1
-    updateTimerDisplay()
-    if (studyTimerRemaining <= 0) {
-      finishStudyTimer()
-    }
-  }, 1000)
+    updateStudyTimerRemaining()
+  }, 250)
 }
 
 const leaveStudyTimer = () => {
+  updateStudyTimerRemaining()
   stopStudyTimerInterval()
   if (studyTimerRemaining > 0) {
     studyTimerRemaining += 2 * 60
   }
   studyTimerRunning = false
+  studyTimerEndsAt = null
   renderHome()
 }
 
@@ -159,7 +169,7 @@ const renderStudyTimer = () => {
 
       <section class="study-timer-card" role="timer" aria-live="polite">
         <p class="eyebrow"></p>
-        <h1>25 minute pomodoro</h1>
+        <h1></h1>
         <strong data-study-timer>${formatTime(studyTimerRemaining)}</strong>
         <p class="timer-note">stay focused!!</p>
         <div class="timer-controls">
@@ -251,7 +261,7 @@ const renderAuth = (mode: 'login' | 'signup', message = '') => {
       </header>
 
       <section class="auth-card" aria-labelledby="auth-title">
-        <p class="eyebrow">${isSignup ? 'new player' : 'welcome back'}</p>
+        <p class="eyebrow">${isSignup ? 'new player' : ''}</p>
         <h1 id="auth-title">${isSignup ? 'sign up' : 'log in'}</h1>
         <p class="auth-intro">${isSignup ? '' : ''}</p>
         <form class="auth-form" data-auth-form="${mode}">
@@ -300,15 +310,21 @@ app.addEventListener('click', (event) => {
   }
 
   if (studyAction === 'pause') {
-    studyTimerRunning = !studyTimerRunning
-    if (studyTimerRunning && studyTimerInterval === null) {
+    if (studyTimerRunning) {
+      updateStudyTimerRemaining()
+      if (!studyTimerRunning) {
+        return
+      }
+
+      studyTimerRunning = false
+      stopStudyTimerInterval()
+      studyTimerEndsAt = null
+    } else {
+      studyTimerRunning = true
+      studyTimerEndsAt = Date.now() + studyTimerRemaining * 1000
       studyTimerInterval = window.setInterval(() => {
-        studyTimerRemaining -= 1
-        updateTimerDisplay()
-        if (studyTimerRemaining <= 0) {
-          finishStudyTimer()
-        }
-      }, 1000)
+        updateStudyTimerRemaining()
+      }, 250)
     }
     renderStudyTimer()
     return

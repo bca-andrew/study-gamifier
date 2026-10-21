@@ -26,6 +26,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Architects Daughter";
+  src: url("./assets/fonts/ArchitectsDaughter-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Varela Round";
+  src: url("./assets/fonts/VarelaRound-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
   color: #242336;
@@ -46,6 +60,7 @@ body {
 
 button {
   font: inherit;
+  font-family: 'Varela Round', sans-serif;
 }
 
 .home {
@@ -79,7 +94,7 @@ button {
   background: transparent;
   color: #242336;
   cursor: pointer;
-  font-family: 'RibeyeMarrow', cursive;
+  font-family: 'Varela Round', sans-serif;
   font-size: 12px;
   font-weight: 800;
 }
@@ -104,7 +119,7 @@ button {
   background: #101be8;
   color: #fff;
   cursor: pointer;
-  font-family: 'RibeyeMarrow', cursive;
+  font-family: 'Varela Round', sans-serif;
   font-size: 12px;
   font-weight: 800;
   box-shadow: 0 4px 0 rgba(42, 38, 59, .08);
@@ -112,7 +127,6 @@ button {
 
 .auth-button:hover {
   filter: saturate(1.14) brightness(1.04);
-  transform: translateY(-2px);
 }
 
 .auth-button span {
@@ -291,15 +305,13 @@ button {
   border-radius: 2px;
   color: #fff;
   cursor: pointer;
-  font-family: 'RibeyeMarrow', cursive;
+  font-family: 'Varela Round', sans-serif;
   box-shadow: 0 7px 0 rgba(42, 38, 59, .08);
-  transition: filter .18s ease, transform .18s ease, box-shadow .18s ease;
+  transition: filter .18s ease;
 }
 
 .action-button:hover {
   filter: saturate(1.14) brightness(1.04);
-  transform: translateY(-3px);
-  box-shadow: 0 10px 0 rgba(42, 38, 59, .08);
 }
 
 .action-button:active {
@@ -343,7 +355,7 @@ button {
 
 .study-timer-card strong {
   color: #000;
-  font: 900 clamp(62px, 14vw, 126px)/.9 'RibeyeMarrow', cursive;
+  font: 400 clamp(62px, 14vw, 126px)/.9 'Architects Daughter', cursive;
   letter-spacing: -.08em;
 }
 
@@ -501,7 +513,6 @@ button {
   padding: 42px 48px 38px;
   border: 2px solid #242336;
   background: #fff;
-  box-shadow: 10px 10px 0 #e4ec04;
 }
 
 .auth-card .eyebrow {
