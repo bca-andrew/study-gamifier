@@ -408,7 +408,7 @@ button {
   border: 0;
   padding: 5px 8px;
   background: transparent;
-  color: #aaa3ae;
+  color: #bdd1f9;
   cursor: pointer;
   font-size: 10px;
   letter-spacing: .08em;
@@ -416,7 +416,7 @@ button {
 }
 
 .admin-timer-button:hover {
-  color: #e8250c;
+  color: #bdd1f9;
 }
 
 .study-page {
