@@ -189,7 +189,7 @@ const renderHome = () => {
   const coins = getCoins(currentUser)
   const accountControls = currentUser
     ? `<span class="welcome-user">Hi ${escapeHtml(currentUser)}!!</span><span class="coin-balance"><img src="${coinIcon}" alt="" aria-hidden="true" /><span>${coins}</span></span><button class="auth-link" data-auth-action="logout" type="button">log out</button>`
-    : `<button class="auth-link login-link" data-auth-action="login" type="button">log in</button><button class="auth-button" data-auth-action="signup" type="button">sign up <span aria-hidden="true">↗</span></button>`
+    : `<button class="auth-link login-link" data-auth-action="login" type="button">log in</button><button class="auth-button" data-auth-action="signup" type="button">sign up <span aria-hidden="true"></span></button>`
 
   app.innerHTML = `
   <main class="home">
@@ -219,29 +219,30 @@ const renderHome = () => {
       <button class="action-button start-button" data-study-action="start" type="button">
         <span class="button-icon icon-play" aria-hidden="true">▶</span>
         <span class="button-label">start studying</span>
-        <span class="button-arrow" aria-hidden="true">↗</span>
+        <span class="button-arrow" aria-hidden="true"></span>
       </button>
 
       <div class="secondary-actions">
         <button class="action-button secondary-button shop-button" type="button">
           <span class="button-icon" aria-hidden="true">✦</span>
           <span class="button-label">shop</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
+          <span class="button-arrow" aria-hidden="true"></span>
         </button>
         <button class="action-button secondary-button wardrobe-button" type="button">
           <span class="button-icon" aria-hidden="true">✿</span>
           <span class="button-label">wardrobe</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
+          <span class="button-arrow" aria-hidden="true"></span>
         </button>
         <button class="action-button secondary-button friends-button" type="button">
           <span class="button-icon" aria-hidden="true">●●</span>
           <span class="button-label">friends</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
+          <span class="button-arrow" aria-hidden="true"></span>
         </button>
         <button class="action-button secondary-button progress-button" type="button">
           <span class="button-icon" aria-hidden="true">↗</span>
           <span class="button-label">progress</span>
-          <span class="button-arrow" aria-hidden="true">↗</span>
+          <span class="button-arrow" aria-hidden="true"></span>
+          
         </button>
       </div>
     </section>
@@ -249,6 +250,7 @@ const renderHome = () => {
   </main>
 `
 }
+//there was a ↗ sign by each button but i didn't like it so i removed it
 
 const renderAuth = (mode: 'login' | 'signup', message = '') => {
   const isSignup = mode === 'signup'
@@ -272,7 +274,7 @@ const renderAuth = (mode: 'login' | 'signup', message = '') => {
           <p class="form-message${message ? ' is-visible' : ''}" role="alert">${message}</p>
           <button class="action-button start-button auth-submit" type="submit">
             <span class="button-label">${isSignup ? 'create account' : 'log in'}</span>
-            <span class="button-arrow" aria-hidden="true">↗</span>
+            <span class="button-arrow" aria-hidden="true"></span>
           </button>
         </form>
         <p class="auth-switch">${isSignup ? 'already have an account?' : 'new to stume?'}

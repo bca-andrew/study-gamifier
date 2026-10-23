@@ -28,14 +28,14 @@
 
 @font-face {
   font-family: "Architects Daughter";
-  src: url("./assets/fonts/ArchitectsDaughter-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/VarelaRound-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Varela Round";
-  src: url("./assets/fonts/VarelaRound-Regular.ttf") format("truetype");
+  src: url("./assets/fonts/Poppins-Black.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -56,6 +56,10 @@
 body {
   margin: 0;
   min-width: 320px;
+}
+
+body:has(.study-page) {
+  background: url("./assets/images/study_background.png") center / cover fixed no-repeat;
 }
 
 button {
@@ -91,7 +95,7 @@ button {
 .text-button {
   border: 0;
   padding: 0;
-  background: transparent;
+  background: #fefffe7b;
   color: #242336;
   cursor: pointer;
   font-family: 'Varela Round', sans-serif;
@@ -217,7 +221,7 @@ button {
 
 .eyebrow {
   margin: 0 0 15px;
-  color: #aaa3ae;
+  color: #010002;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: .15em;
@@ -303,7 +307,7 @@ button {
   width: 100%;
   border: 0;
   border-radius: 2px;
-  color: #fff;
+  color: #ffffff;
   cursor: pointer;
   font-family: 'Varela Round', sans-serif;
   box-shadow: 0 7px 0 rgba(42, 38, 59, .08);
@@ -340,7 +344,7 @@ button {
   margin: 14vh auto 0;
   border: 3px solid #242336;
   padding: 42px 35px 30px;
-  background: #fefffe7b;
+  background: #bcd0f4;
   color: #242336;
   box-shadow: 10px 10px 0 rgba(42, 38, 59, .12);
   text-align: center;
@@ -420,6 +424,14 @@ button {
   min-height: 100vh;
   margin: 0 auto;
   padding: 28px 56px 30px;
+}
+
+.study-page .auth-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+  appearance: none;
 }
 
 .button-icon {
@@ -582,7 +594,7 @@ button {
 
 .auth-switch {
   margin: 25px 0 0;
-  color: #8b8795;
+  color: #38373c;
   font-size: 13px;
   text-align: center;
 }
